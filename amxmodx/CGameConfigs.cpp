@@ -598,25 +598,26 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 		}
 		case PSTATE_GAMEDEFS_CRC_BINARY:
 		{
-			if (!m_CurrentCRCMatched && m_CurrentBinCRCValid)
-			{
-				const char *libraryName = m_CurrentCRCLibrary[0] ? m_CurrentCRCLibrary : "<unknown>";
-				const char *platform = m_LastCRCPlatform[0] ? m_LastCRCPlatform : "<unknown>";
-				char expectedHex[9];
-				char actualHex[9];
-				if (m_LastCRCExpected)
-				{
-					ke::SafeSprintf(expectedHex, sizeof(expectedHex), "%08X", m_LastCRCExpected);
-				}
-				else
-				{
-					strncopy(expectedHex, "????????", sizeof(expectedHex));
-				}
-				ke::SafeSprintf(actualHex, sizeof(actualHex), "%08X", m_CurrentBinCRC);
-
-				AMXXLOG_Log("GameConfig CRC mismatch for game \"%s\" section \"%s\" library \"%s\" platform \"%s\" expected %s got %s",
-							m_Game, m_CurrentCRCSection, libraryName, platform, expectedHex, actualHex);
-			}
+			// 移除CRC不匹配日志输出，保留状态切换逻辑 
+//			if (!m_CurrentCRCMatched && m_CurrentBinCRCValid)
+//			{
+//				const char *libraryName = m_CurrentCRCLibrary[0] ? m_CurrentCRCLibrary : "<unknown>";
+//				const char *platform = m_LastCRCPlatform[0] ? m_LastCRCPlatform : "<unknown>";
+//				char expectedHex[9];
+//				char actualHex[9];
+//				if (m_LastCRCExpected)
+//				{
+//					ke::SafeSprintf(expectedHex, sizeof(expectedHex), "%08X", m_LastCRCExpected);
+//				}
+//				else
+//				{
+//					strncopy(expectedHex, "????????", sizeof(expectedHex));
+//				}
+//				ke::SafeSprintf(actualHex, sizeof(actualHex), "%08X", m_CurrentBinCRC);
+//
+//				AMXXLOG_Log("GameConfig CRC mismatch for game \"%s\" section \"%s\" library \"%s\" platform \"%s\" expected %s got %s",
+//							m_Game, m_CurrentCRCSection, libraryName, platform, expectedHex, actualHex);
+//			}
 
 			m_ParseState = PSTATE_GAMEDEFS_CRC;
 			break;
@@ -1246,17 +1247,18 @@ void CGameConfigManager::CacheGameBinaryInfo(const char *library)
 	{
 		AMXXLOG_Log("GameConfig CRC unable to resolve path for library \"%s\"", library);
 	}
-
-	if (info.crcOk)
-	{
-		char hex[9];
-		ke::SafeSprintf(hex, sizeof(hex), "%08X", info.crc);
-		AMXXLOG_Log("GameConfig CRC computed %s=%s (%s)", library, hex, path[0] ? path : "<unknown>");
-	}
-	else
-	{
-		AMXXLOG_Log("GameConfig CRC missing for library \"%s\"", library);
-	}
+	
+// 移除CRC计算日志输出，保留原有逻辑 
+//	if (info.crcOk)
+//	{
+//		char hex[9];
+//		ke::SafeSprintf(hex, sizeof(hex), "%08X", info.crc);
+//		AMXXLOG_Log("GameConfig CRC computed %s=%s (%s)", library, hex, path[0] ? path : "<unknown>");
+//	}
+//	else
+//	{
+//		AMXXLOG_Log("GameConfig CRC missing for library \"%s\"", library);
+//	}
 
 	m_BinaryInfos.insert(library, info);
 }
